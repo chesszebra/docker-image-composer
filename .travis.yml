@@ -8,20 +8,21 @@ env:
     - secure: "l3Dlz2RU3JJU+Hzcqe7H7UykGZPYIvSw5IVgJ5jfLSDDJn/BGkurtljPpONUcbDyhgL1OX7WEUYZTKakIxWBk+5MWenhAsTQ2Jlwv9sz2QLl/SoMjNEbluk6CTsa24J3M7drvoqphofMeo2bgNe5crJlcqF9N0Pj3ysDA7AjQTqRK8OtMS8k74ji8fG21xj6CoquqabfIMGOr4sayKAKjN9ITjshgj/rnMiPRCBja9nEffTIdjKb6kd6b9hRlVDtkZsnnzk5lL2cuFS6aD9TbowTBgflKtZUzSjmbfBwk17kz4eLZyormue5bkZ6210+Qd0Vt43FpVJO+BCEvBElfOhG6xwV6Cf2WFG2YEIjmMsxV1gvhOSvRXtuBvjGdl4RM/K/XFz1pz5nn8jKKR91+kCKVT9dZJL+O2uxVjAU4BJa+NLyntIsNZAVFQ/b0BYu33BuscYV/n+A7aBZBV/5JuwCLy3If8yrD+kWhve+AZqKBRGNO7xvK8ONhr0/FATKbSzNL3ghBgOvJC6RVedwlpRz96c59/LnesYT6WMaPv/Kz01DOzJtmDOhEPRXdpHUlbG7BdsNC2dhomFyeakng9nkGS+GK6daWCF2co+OJMf+j8bg7LZs4fvtavHtnBXx/hSwQ6d1148g2PxOeSyQ9XYcrCfIylUq0Cjndw80KnE="
   matrix:
     - VERSION=7.1
+    - VERSION=latest VERSION_ALIAS=7.1
 
 before_script:
-  - cd "src/$VERSION"
+  - if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION" fi
   - IMAGE_NAME="chesszebra/composer:${VERSION}"
 
 script:
-  - travis_retry docker build -t "$IMAGE_NAME" .
+  - if [[ "$VERSION" != "latest" ]]; then travis_retry docker build -t "$IMAGE_NAME" . fi
+  - if [[ "$VERSION" == "latest" ]]; then travis_retry docker tag chessszebra/composer:$VERSION_ALIAS $IMAGE_NAME fi
 
 after_success:
   - docker login --username $DOCKER_USER --password $DOCKER_PASS
   - docker push $IMAGE_NAME
 
 after_script:
-  - docker tag chessszebra/composer:7.1 chessszebra/composer:latest
   - docker images
 
 notifications:
