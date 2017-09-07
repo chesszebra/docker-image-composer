@@ -11,12 +11,12 @@ env:
     - VERSION=latest VERSION_ALIAS=7.1
 
 before_script:
-  - if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION" fi
+  - if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION"; fi
   - IMAGE_NAME="chesszebra/composer:${VERSION}"
 
 script:
-  - if [[ "$VERSION" != "latest" ]]; then travis_retry docker build -t "$IMAGE_NAME" . fi
-  - if [[ "$VERSION" == "latest" ]]; then travis_retry docker tag chessszebra/composer:$VERSION_ALIAS $IMAGE_NAME fi
+  - if [[ "$VERSION" != "latest" ]]; then travis_retry docker build -t "$IMAGE_NAME" .; fi
+  - if [[ "$VERSION" == "latest" ]]; then travis_retry docker tag chessszebra/composer:$VERSION_ALIAS $IMAGE_NAME; fi
 
 after_success:
   - docker login --username $DOCKER_USER --password $DOCKER_PASS
