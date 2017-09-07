@@ -10,18 +10,19 @@ env:
     - VERSION=7.1
 
 before_script:
-- cd "src/$VERSION"
-- IMAGE_NAME="chesszebra/composer:${VERSION}"
+  - cd "src/$VERSION"
+  - IMAGE_NAME="chesszebra/composer:${VERSION}"
 
 script:
-- travis_retry docker build -t "$IMAGE_NAME" .
+  - travis_retry docker build -t "$IMAGE_NAME" .
 
 after_success:
-- docker login --username $DOCKER_USER --password $DOCKER_PASS
-- docker push $IMAGE_NAME
+  - docker login --username $DOCKER_USER --password $DOCKER_PASS
+  - docker push $IMAGE_NAME
 
 after_script:
-- docker images
+  - docker tag chessszebra/composer:7.1 chessszebra/composer:latest
+  - docker images
 
 notifications:
   email: false
