@@ -10,6 +10,7 @@ RUN apt-get update \
  	git \
  	openssh-client \
 	wget \
+	unzip \
 	zlib1g-dev
 
 # Install Tini
