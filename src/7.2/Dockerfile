@@ -37,8 +37,8 @@ RUN /usr/local/bin/install-composer.sh \
 
 # Cleanup
 RUN rm /usr/local/bin/install-composer.sh \
- && apt-get autoremove \
- && apt-get purge
+ && apt-get autoremove -y \
+ && apt-get purge -y
 
 # Run the container as the configured user
 USER php:php
