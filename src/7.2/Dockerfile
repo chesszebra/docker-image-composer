@@ -1,4 +1,4 @@
-FROM chesszebra/php:7.0-cli
+FROM chesszebra/php:7.2-cli
 
 # Run as root
 USER root:root
@@ -9,12 +9,17 @@ RUN apt-get update \
  	curl \
  	git \
  	openssh-client \
-	wget
+	wget \
+	zlib1g-dev
 
 # Install Tini
 ENV TINI_VERSION v0.17.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
 RUN chmod +x /sbin/tini
+
+# Install the zip extension
+RUN docker-php-ext-install zip \
+ && docker-php-ext-enable zip
 
 # Add the composer installer script and the entry point script
 ADD usr/local/bin/install-composer.sh /usr/local/bin/install-composer.sh
