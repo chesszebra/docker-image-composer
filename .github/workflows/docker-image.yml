@@ -14,23 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build chesszebra/composer:7.2
-        run: |
-          if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION"; fi
-          if [[ "$VERSION" == "latest" ]]; then cd "src/$VERSION_ALIAS"; fi
-          IMAGE_NAME="chesszebra/$(echo "$GITHUB_REPOSITORY" | cut -c 25-):${VERSION}"
-          docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
-        env:
-          VERSION: 7.2
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build chesszebra/composer:latest
-        run: |
-          if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION"; fi
-          if [[ "$VERSION" == "latest" ]]; then cd "src/$VERSION_ALIAS"; fi
-          IMAGE_NAME="chesszebra/$(echo "$GITHUB_REPOSITORY" | cut -c 25-):${VERSION}"
-          docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
-        env:
-          VERSION: latest
-          VERSION_ALIAS: 7.2
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: src/7.2/
+          push: true
+          tags: |
+            chesszebra/composer:7.2
+            chesszebra/composer:latest
