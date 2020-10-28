@@ -5,13 +5,31 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  schedule:
+    - cron: '0 0 * * 0'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build chesszebra/composer:7.2
-      run: docker build . --file src/7.2/Dockerfile --tag chesszebra/composer:7.2
-    - name: Build chesszebra/composer:latest
-      run: docker build . --file src/7.2/Dockerfile --tag chesszebra/composer:latest
+      - uses: actions/checkout@v2
+
+      - name: Build chesszebra/composer:7.2
+        run: |
+          if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION"; fi
+          if [[ "$VERSION" == "latest" ]]; then cd "src/$VERSION_ALIAS"; fi
+          docker build -t $IMAGE_NAME .
+        env:
+          VERSION: 7.2
+          IMAGE_NAME: chesszebra/$(echo "$GITHUB_REPOSITORY" | cut -c 25-):${VERSION}"
+
+      - name: Build chesszebra/composer:latest
+        run: |
+          if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION"; fi
+          if [[ "$VERSION" == "latest" ]]; then cd "src/$VERSION_ALIAS"; fi
+          docker build -t $IMAGE_NAME .
+        env:
+          VERSION: latest
+          VERSION_ALIAS: 7.2
+          IMAGE_NAME: chesszebra/$(echo "$GITHUB_REPOSITORY" | cut -c 25-):${VERSION}"
+
