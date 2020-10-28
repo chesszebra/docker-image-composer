@@ -21,14 +21,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build
-        uses: docker/build-push-action@v2
-        with:
-          context: src/7.2/
-          tags: |
-            chesszebra/composer:7.2
-            chesszebra/composer:latest
-
-      - name: Push
         run: |
+          cd src/7.2
+          docker build -t chesszebra/composer:7.2 -t chesszebra/composer:latest .
           docker push chesszebra/composer:7.2
           docker push chesszebra/composer:latest
