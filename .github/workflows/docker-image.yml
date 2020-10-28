@@ -18,7 +18,7 @@ jobs:
         run: |
           if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION"; fi
           if [[ "$VERSION" == "latest" ]]; then cd "src/$VERSION_ALIAS"; fi
-          IMAGE_NAME="chesszebra/$(echo "$TRAVIS_REPO_SLUG" | cut -c 25-):${VERSION}"
+          IMAGE_NAME="chesszebra/$(echo "$GITHUB_REPOSITORY" | cut -c 25-):${VERSION}"
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
         env:
@@ -28,10 +28,9 @@ jobs:
         run: |
           if [[ "$VERSION" != "latest" ]]; then cd "src/$VERSION"; fi
           if [[ "$VERSION" == "latest" ]]; then cd "src/$VERSION_ALIAS"; fi
-          IMAGE_NAME="chesszebra/$(echo "$TRAVIS_REPO_SLUG" | cut -c 25-):${VERSION}"
+          IMAGE_NAME="chesszebra/$(echo "$GITHUB_REPOSITORY" | cut -c 25-):${VERSION}"
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
         env:
           VERSION: latest
           VERSION_ALIAS: 7.2
-
