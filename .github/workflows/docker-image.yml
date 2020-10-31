@@ -9,7 +9,7 @@ on:
     - cron: '0 0 * * 0'
 
 jobs:
-  Build PHP 7.2:
+  build-php72:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
           docker push chesszebra/composer:php72
           docker push chesszebra/composer:latest
 
-  Build PHP 7.3:
+  build-php73:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +44,7 @@ jobs:
           docker build -t chesszebra/composer:php73 .
           docker push chesszebra/composer:php73
 
-  Build PHP 7.4:
+  build-php74:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
